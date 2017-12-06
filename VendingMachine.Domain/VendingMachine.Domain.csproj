@@ -58,13 +58,13 @@
     <Compile Include="Entities\Food\Cookie.cs" />
     <Compile Include="Entities\Food\Ham.cs" />
     <Compile Include="Entities\Food\Jam.cs" />
-    <Compile Include="Entities\Food\Sandwich.cs" />
     <Compile Include="Entities\Interfaces\IDrink.cs" />
     <Compile Include="Entities\Interfaces\IFood.cs" />
     <Compile Include="Entities\Interfaces\IIngredient.cs" />
     <Compile Include="Entities\Interfaces\IProduct.cs" />
     <Compile Include="Entities\Mappings\ProductMap.cs" />
     <Compile Include="Entities\Mappings\RecipeMap.cs" />
+    <Compile Include="Entities\Menu.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderType.cs" />
     <Compile Include="Entities\Product.cs" />

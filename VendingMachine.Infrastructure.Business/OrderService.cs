@@ -8,5 +8,6 @@ namespace VendingMachine.Infrastructure.Business
 {
     public class OrderService
     {
+
     }
 }

@@ -11,7 +11,7 @@ namespace VendingMachine.Domain.Entities.Mappings
 
         public string Name { get; set; }
 
-        public int MaxAmount { get; set; }
+        public int Quantity { get; set; }
 
         public override bool Equals(object obj)
         {

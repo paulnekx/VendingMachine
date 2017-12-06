@@ -5,8 +5,10 @@ namespace VendingMachine.Services
 {
     public interface IProductService
     {
-        IEnumerable<IProduct> GetFoodProducts();
+        IEnumerable<IProduct> FoodProducts { get; }
 
-        IEnumerable<IProduct> GetSoftDrinkProducts();
+        IEnumerable<IProduct> SoftDrinkProducts { get; }
+
+        void Import();
     }
 }

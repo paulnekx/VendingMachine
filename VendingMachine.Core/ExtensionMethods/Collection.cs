@@ -7,7 +7,7 @@ namespace VendingMachine.Core.ExtensionMethods
     public static class Collection
     {
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection) 
-            => collection != null && collection.Any();
+            => collection == null || !collection.Any();
 
         public static IEnumerable<TResult> LeftJoin<TOuter, TInner, TKey, TResult>(this IEnumerable<TOuter> outer,
         IEnumerable<TInner> inner, Func<TOuter, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector,

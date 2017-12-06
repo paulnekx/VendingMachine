@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EE07743B-033B-4030-BE32-4167AEAAC575}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VendingMachine.Infrastructure.Business</RootNamespace>
-    <AssemblyName>VendingMachine.Infrastructure.Business</AssemblyName>
+    <ProjectGuid>{034DE8B7-E88F-40B6-9602-A5AC91607611}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TestApp</RootNamespace>
+    <AssemblyName>TestApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,15 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="SimpleInjector, Version=4.0.12.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.4.0.12\lib\net45\SimpleInjector.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,30 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OrderService.cs" />
-    <Compile Include="ProductService.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VendingMachine.Core\VendingMachine.Core.csproj">
-      <Project>{1640F5EC-1375-4519-A864-BD1FF9949914}</Project>
-      <Name>VendingMachine.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VendingMachine.Domain\VendingMachine.Domain.csproj">
-      <Project>{35F5AF8D-9B57-4934-8D49-4B01809760C0}</Project>
-      <Name>VendingMachine.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VendingMachine.Infrastructure.Data\VendingMachine.Infrastructure.Data.csproj">
-      <Project>{9EA6360B-0DE2-48EB-B86B-FC088BA1B080}</Project>
-      <Name>VendingMachine.Infrastructure.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VendingMachine.Services\VendingMachine.Services.csproj">
-      <Project>{6586218c-ae82-4fd5-87e3-546cd77f2b95}</Project>
-      <Name>VendingMachine.Services</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\VendingMachine.Domain\VendingMachine.Domain.csproj">
+      <Project>{35f5af8d-9b57-4934-8d49-4b01809760c0}</Project>
+      <Name>VendingMachine.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VendingMachine.Infrastructure.Business\VendingMachine.Infrastructure.Business.csproj">
+      <Project>{ee07743b-033b-4030-be32-4167aeaac575}</Project>
+      <Name>VendingMachine.Infrastructure.Business</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

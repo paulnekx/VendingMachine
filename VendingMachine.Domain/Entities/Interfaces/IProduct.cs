@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using VendingMachine.Core.Interfaces;
 
 namespace VendingMachine.Domain.Entities.Interfaces
 {
-    public interface IProduct
+    public interface IProduct : IEntity
     {
+        int Id { get; set; }
+
         int Quantity { get; set; }
 
         decimal Cost { get; set; }
 
-        ReadOnlyCollection<IIngredient> BasicIngredients { get; set; }
+        ReadOnlyCollection<IProduct> BasicIngredients { get; set; }
 
-        ReadOnlyCollection<IIngredient> Ingredients { get; }
+        ReadOnlyCollection<IProduct> Ingredients { get; }
 
-        List<IIngredient> OptionalIngredients { get; set; }
+        List<IProduct> OptionalIngredients { get; set; }
     }
 }

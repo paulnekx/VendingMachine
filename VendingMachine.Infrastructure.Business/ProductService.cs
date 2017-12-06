@@ -8,18 +8,50 @@ using VendingMachine.Infrastructure.Data;
 using VendingMachine.Services;
 using System.Linq;
 using VendingMachine.Domain.Entities.Mappings;
-using SimpleInjector;
+using AutoMapper;
 
 namespace VendingMachine.Infrastructure.Business
 {
     public class ProductService : IProductService, IDisposable
     {
-        private IEqualityComparer<ProductMap> _comparer;
         private bool disposedValue = false;
+        private IEqualityComparer<ProductMap> _comparer;
+        private static IProductFactory _productFactory;
         private readonly IProductRepository _productRepository;
         private readonly IRecipeRepository _recipeRepository;
 
-        public ReadOnlyCollection<IProduct> Products { get; private set; }
+        //public ReadOnlyCollection<IProduct> Products { get; private set; }
+
+        public Menu Menu { get; private set; } = new Menu();
+
+        public IEnumerable<IProduct> FoodProducts { get; private set; }
+
+        public IEnumerable<IProduct> SoftDrinkProducts { get; private set; }
+
+        static ProductService()
+        {
+            Mapper.Initialize(cfg =>
+            {
+                //cfg.CreateMap<ProductMap, IProduct>()
+                //.BeforeMap((src, dest) =>
+                //{
+                //    dest = _productFactory.Create(src.Name);
+                //});
+                cfg.CreateMap<KeyValuePair<ProductMap, IEnumerable<RecipeMap>>, IProduct>()
+                .BeforeMap((src, dest) =>
+                {
+                    dest = _productFactory.Create(src.Key.Name);
+                })
+                .AfterMap((src, dest) =>
+                {
+                    var basicIngredients = src.Value
+                        .Where(l => !l.IsOptional)
+                        .Select(l => _productFactory.Create(l.Ingredient.Name))
+                        .ToList();
+                    dest.BasicIngredients = new ReadOnlyCollection<IProduct>(basicIngredients);
+                });
+            });
+        }
 
         /// <summary>
         /// С введением IoC данный конструктор потеряет актуальность
@@ -31,63 +63,51 @@ namespace VendingMachine.Infrastructure.Business
 
         public ProductService(IProductRepository productRepository, IRecipeRepository recipeRepository, IEqualityComparer<ProductMap> comparer)
         {
+            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+            _productFactory = ProductCreator.GetInstance().ProductFactory;
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _recipeRepository = recipeRepository ?? throw new ArgumentNullException(nameof(recipeRepository));
-            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
-            Initialize();
         }
 
-        private void Initialize()
+        public void Import()
         {
-            var products = _productRepository.Get();
-            var recipes = _recipeRepository.Get();
-            var productToIngredient = products.GroupJoin(recipes, o => o, i => i.Product, (o, i) => new
+            var t = _productRepository.Get().GroupJoin(_recipeRepository.Get(),
+                o => o, i => i.Product,
+                (o, i) =>  new
+                {
+                    Product = o,
+                    Ingredients = i.Select(l => l.Ingredient)
+
+
+                    //var product = Mapper.Map<KeyValuePair<ProductMap, IEnumerable<RecipeMap>>, IProduct>(new KeyValuePair<ProductMap, IEnumerable<RecipeMap>>(o, i));
+
+
+                    //var test = i.Where(l => l.IsOptional).Select(l => Mapper.Map<IProduct>())
+
+                    ////var optionalIngredients = src.Value
+                    ////    
+                    ////    .Select(l => _productFactory.Create(l.Ingredient.Name))
+                    ////    .ToList();
+                    ////dest.OptionalIngredients = optionalIngredients;
+
+                    //return new KeyValuePair<IProduct, IEnumerable<IProduct>>(product, )
+                },
+                _comparer);
+
+            var products = new List<Product>();
+            foreach (var item in mapProductToIngredients)
             {
-                Product = o,
-                Ingredients = i
-            }, _comparer);
+                var product = _productFactory.Create(item.Key.Name);
+                Mapper.Map(source: item, destination: product);
+            }
 
-            RegisterProductFactory(out var productFactory);
-            
-            Products = productToIngredient.Select(l => 
-            {
-                var ingredients = l.Ingredients.Cast<IIngredient>();
-                var product = productFactory.Create(l.Product.Name);
-                product.BasicIngredients = new ReadOnlyCollection<IIngredient>(ingredients);
-                return product;
-            });
-        }
-
-        private void RegisterProductFactory(out ProductFactory productFactory)
-        {
-            var container = new Container();
-            var factory = new ProductFactory(container);
-            factory.Register<Bread>("Хлеб");
-            factory.Register<Bun>("Булочка");
-            factory.Register<Chips>("Чипсы");
-            factory.Register<Cookie>("Печенье");
-            factory.Register<Ham>("Ветчина");
-            factory.Register<Cheese>("Сыр");
-            factory.Register<Water>("Вода");
-            factory.Register<Espresso>("Эспрессо");
-            factory.Register<Latte>("Латте");
-            factory.Register<Cappuccino>("Капучино");
-            factory.Register<BlackTea>("Чай черный");
-            factory.Register<GreenTea>("Чай зеленый");
-            factory.Register<Milk>("Молоко");
-            factory.Register<Sugar>("Сахар");
-            container.RegisterSingleton<IProductFactory>(factory);
-            productFactory = factory;
-        }
-
-        public IEnumerable<IProduct> GetFoodProducts()
-        {
-            return Products.Where(l => typeof(IFood).IsAssignableFrom(l.GetType()));
-        }
-
-        public IEnumerable<IProduct> GetSoftDrinkProducts()
-        {
-            return Products.Where(l => typeof(IDrink).IsAssignableFrom(l.GetType()));
+            var products1 = mapProductToIngredients.Select(l =>
+           {
+               var product = _productFactory.Create(l.Key.Name);
+               Mapper.Map(source: l, destination: product);
+               return product;
+           });
+            //Products = 
         }
 
         protected virtual void Dispose(bool disposing)

@@ -9,20 +9,22 @@ namespace VendingMachine.Domain.Entities
 {
     public class Product : IProduct
     {
+        public int Id { get; set; }
+
         public int Quantity { get; set; } = 1;
 
         public decimal Cost { get; set; }
 
-        public ReadOnlyCollection<IIngredient> BasicIngredients { get; set; } = new List<IIngredient>().AsReadOnly();
+        public ReadOnlyCollection<IProduct> BasicIngredients { get; set; } = new List<IProduct>().AsReadOnly();
 
-        public List<IIngredient> OptionalIngredients { get; set; } = new List<IIngredient>();
+        public List<IProduct> OptionalIngredients { get; set; } = new List<IProduct>();
 
-        public ReadOnlyCollection<IIngredient> Ingredients
+        public ReadOnlyCollection<IProduct> Ingredients
         {
             get
             {
                 var ingredients = BasicIngredients.Union(OptionalIngredients).ToList();
-                return new ReadOnlyCollection<IIngredient>(ingredients);
+                return new ReadOnlyCollection<IProduct>(ingredients);
             }
         }
 
